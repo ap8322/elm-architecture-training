@@ -1,0 +1,7 @@
+{
+  "name": "elm-golang-k8s",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "ap8322",
+  "license": "MIT"
+}
