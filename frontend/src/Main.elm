@@ -3,6 +3,9 @@ module Main exposing (Model, Msg(..), init, main, update, view)
 import Browser
 import Html exposing (Html, div, h1, img, text)
 import Html.Attributes exposing (src)
+import Http
+import Json.Decode as Decode
+import Url.Builder as Url
 
 
 
@@ -10,12 +13,12 @@ import Html.Attributes exposing (src)
 
 
 type alias Model =
-    {}
+    { message : String }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( {}, Cmd.none )
+    ( { message = "" }, getHealthCheck )
 
 
 
@@ -23,12 +26,17 @@ init _ =
 
 
 type Msg
-    = NoOp
+    = HealthCheck (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        HealthCheck (Ok res) ->
+            ( { model | message = res }, Cmd.none )
+
+        HealthCheck (Err _) ->
+            ( { model | message = "error" }, Cmd.none )
 
 
 
@@ -38,7 +46,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ text "Your Elm App is working!" ]
+        [ h1 [] [ text model.message ]
         ]
 
 
@@ -54,3 +62,18 @@ main =
         , subscriptions = subscriptions
         , view = view
         }
+
+
+getHealthCheck : Cmd Msg
+getHealthCheck =
+    Http.send HealthCheck (Http.get getUrl decoder)
+
+
+getUrl : String
+getUrl =
+    Url.crossOrigin "http://localhost:8080" [ "health" ] []
+
+
+decoder : Decode.Decoder String
+decoder =
+    Decode.field "message" Decode.string
