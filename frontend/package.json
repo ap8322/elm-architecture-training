@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack",
+    "prd-build": "webpack --mode=production",
     "start": "webpack-serve",
     "repl": "elm repl"
   },
