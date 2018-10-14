@@ -29,6 +29,8 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# dep
+vendor
 
 ### https://raw.github.com/github/gitignore/72190ee30bd1e2ccc233222341435adacb7a6500/Node.gitignore
 
